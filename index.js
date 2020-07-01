@@ -1,3 +1,5 @@
+const servername = "TEST SEVER"
+
 const content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
 
 function room(number, type="empty", players = []){
@@ -21,7 +23,7 @@ const httpServer = require('http').createServer((req, res) => {
 const io = require('socket.io')(httpServer);
 
 io.on('connect', socket => {
-  console.log('connect');
+  console.log('connected');
   socket.emit()
 });
 
@@ -30,7 +32,7 @@ httpServer.listen(3000, () => {
 });
 
 io.on('connect', socket => {
-      socket.emit('setup', "Test server");
+      socket.emit('setup', servername);
 
   });
 
