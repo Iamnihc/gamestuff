@@ -25,14 +25,9 @@ const io = require('socket.io')(httpServer);
 io.on('connect', socket => {
   console.log('connected');
   socket.emit()
+  socket.emit('setup', servername);
 });
 
 httpServer.listen(3000, () => {
   console.log('go to http://localhost:3000');
 });
-
-io.on('connect', socket => {
-      socket.emit('setup', servername);
-
-  });
-
