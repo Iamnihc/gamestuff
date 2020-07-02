@@ -1,10 +1,14 @@
 <!DOCTYPE html>
+<!-- solitary nameless over wire multiuser ammusement nook -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Minimal working example</title>
 </head>
 <body>
+    <form onsubmit="checkUser(); return false;">
+      <input id="thebox" type="text">
+    </form>
     <ul id="events"></ul>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -25,6 +29,26 @@
 
         socket.on('setup', (server) => {
             $events.appendChild(newItem(`Connected to server: ${server}`));
+        });
+
+
+        function checkUser(){
+          var name = document.getElementById("thebox").value;
+          
+          socket.emit("user", name );
+          console.log(name);
+          return false;
+        };
+        // The user exists, ask for the pin
+        socket.on('pin', (username) =>{
+          var pin = prompt("user exists. enter pin");
+          socket.emit('auth',{username, pin });
+        });
+        // the user does not exist, get the pin
+        socket.on('makepin',(uname) =>{
+          var pin = prompt("user does not exist. enter pin");
+          alert("your pin is now " + pin + " you can not change it");
+          socket.emit('usercreate',{uname, pin });
         });
 
 
