@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- solitary nameless over wire multiuser ammusement nook -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -44,7 +45,11 @@
           socket.emit('auth',{username, pin });
         });
         // the user does not exist, get the pin
-        
+        socket.on('makepin',(uname) =>{
+          var pin = prompt("user does not exist. enter pin");
+          alert("your pin is now " + pin + " you can not change it");
+          socket.emit('usercreate',{uname, pin });
+        });
 
 
 
