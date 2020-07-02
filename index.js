@@ -5,9 +5,8 @@ const content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
 var users = syncUserBase();
 
 function syncUserBase(){
-
+  var data = fs.readFileSync('./users.json');
   try {
-    var data = fs.readFileSync('./users.json');
     users = JSON.parse(data);
     console.dir(users);
     return users;
@@ -43,19 +42,14 @@ function user(name, pin=1234){
 
 var rooms = [room(1)];
 var playernum = 0;
+const httpServer = require('http').createServer((req, res) => {
+  // serve the index.html file
+  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Length', Buffer.byteLength(content));
+  res.end(content);
+});
 
-
-
-var static = require('node-static');
-var http = require('http');
-
-var file = new(static.Server)();
-
-const mightwork = http.createServer(function (req, res) {
-  file.serve(req, res);
-}).listen(8080);
-
-const io = require('socket.io')(mightwork);
+const io = require('socket.io')(httpServer);
 
 io.on('connect', socket => {
   playernum++;
@@ -87,3 +81,7 @@ io.on('connect', socket => {
 });
 
 
+
+httpServer.listen(3000, () => {
+  console.log('go to http://localhost:3000');
+});
