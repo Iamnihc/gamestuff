@@ -12,47 +12,6 @@
     <ul id="events"></ul>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const $events = document.getElementById('events');
-
-        const newItem = (content) => {
-          const item = document.createElement('li');
-          item.innerText = content;
-          return item;
-        };
-
-        const socket = io();
-
-        socket.on('connect', () => {
-          $events.appendChild(newItem('connected to game server'));
-        });
-
-        socket.on('setup', (server) => {
-            $events.appendChild(newItem(`Connected to server: ${server}`));
-        });
-
-
-        function checkUser(){
-          var name = document.getElementById("thebox").value;
-          
-          socket.emit("user", name );
-          console.log(name);
-          return false;
-        };
-        // The user exists, ask for the pin
-        socket.on('pin', (username) =>{
-          var pin = prompt("user exists. enter pin");
-          socket.emit('auth',{username, pin });
-        });
-        // the user does not exist, get the pin
-        socket.on('makepin',(uname) =>{
-          var pin = prompt("user does not exist. enter pin");
-          alert("your pin is now " + pin + " you can not change it");
-          socket.emit('usercreate',{uname, pin });
-        });
-
-
-
-    </script>
+    <script src = "ps.js"></script>
 </body>
 </html>
