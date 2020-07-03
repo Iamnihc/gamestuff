@@ -31,7 +31,9 @@ const $events = document.getElementById('events');
         });
         // the user does not exist, get the pin
         socket.on('makepin',(uname) =>{
-          var pin = prompt("user does not exist. enter pin");
+            do {var pin = prompt("user does not exist. enter pin");}
+            while (pin.length == 4 &&  ! isNaN(pin-1));
+
           alert("your pin is now " + pin + " you can not change it");
           socket.emit('usercreate',{uname, pin });
         });
