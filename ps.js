@@ -31,8 +31,9 @@ const $events = document.getElementById('events');
         });
         // the user does not exist, get the pin
         socket.on('makepin',(uname) =>{
+            // dirty check if the users pin is a 4 digit number (really dirty)
             do {var pin = prompt("user does not exist. enter pin");}
-            while (pin.length == 4 &&  ! isNaN(pin-1));
+            while (pin.length == 4 &&  ! isSafeInteger(pin) && pin>=0);
 
           alert("your pin is now " + pin + " you can not change it");
           socket.emit('usercreate',{uname, pin });
