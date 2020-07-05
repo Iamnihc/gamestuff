@@ -50,8 +50,8 @@ var http = require('http');
 var file = new (fileserver.Server)();
 var mightwork = http.createServer(function (req, res) {
     file.serve(req, res);
-    console.log("Debug attached at http://localhost:8080. NOT PRODUCTION");
-}).listen(8080);
+    console.log("Debug attached at http://localhost:80. NOT PRODUCTION");
+}).listen(80);
 var io = require('socket.io')(mightwork);
 io.on('connect', function (socket) {
     playernum++;
