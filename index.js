@@ -17,6 +17,7 @@ function syncUserBase() {
         return users;
     }
     catch (err) {
+        // i know this throws an error if the file doesnt exist but thats ok for now
         console.log('There has been an error parsing your JSON.');
         console.log(err);
         return [];
@@ -49,6 +50,7 @@ var http = require('http');
 var file = new (fileserver.Server)();
 var mightwork = http.createServer(function (req, res) {
     file.serve(req, res);
+    console.log("Debug attached at http://localhost:8080. NOT PRODUCTION");
 }).listen(8080);
 var io = require('socket.io')(mightwork);
 io.on('connect', function (socket) {
@@ -79,4 +81,3 @@ io.on('connect', function (socket) {
         }
     });
 });
-//# sourceMappingURL=index.js.map
