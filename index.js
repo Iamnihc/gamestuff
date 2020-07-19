@@ -50,7 +50,11 @@ var http = require('http');
 var file = new (fileserver.Server)();
 var mightwork = http.createServer(function (req, res) {
     file.serve(req, res);
+<<<<<<< HEAD
     console.log("Debug attached at http://localhost:80. NOT PRODUCTION");
+=======
+    console.log("Debug attached at http://localhost:8080. NOT PRODUCTION");
+>>>>>>> parent of ba32ba3... switched to socket.io cdn and changed port number
 }).listen(8080);
 var io = require('socket.io')(mightwork);
 io.on('connect', function (socket) {
