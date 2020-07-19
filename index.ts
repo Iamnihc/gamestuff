@@ -72,7 +72,7 @@ var file = new(fileserver.Server)();
 const mightwork = http.createServer(function (req:any, res:any) {
   file.serve(req, res);
   console.log("Debug attached at http://localhost:80. NOT PRODUCTION")
-}).listen(80);
+}).listen(8080);
 
 const io = require('socket.io')(mightwork);
 
