@@ -8,10 +8,8 @@ var games;
 })(games || (games = {}));
 var servername = "TEST SEVER";
 var fs = require('fs');
-var users = [];
-saveUserBase();
 var content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
-//var users : user[] = syncUserBase();
+var users = syncUserBase();
 function syncUserBase() {
     try {
         var data = fs.readFileSync('./users.json');

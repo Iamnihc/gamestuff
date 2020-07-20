@@ -7,15 +7,15 @@ enum games{
 const servername = "TEST SEVER"
 
 var fs = require('fs');
-var users:user[] = [];
-saveUserBase();
+
+
 
 const content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
 interface user{
   name:string;
   pin:number;
 }
-//var users : user[] = syncUserBase();
+var users : user[] = syncUserBase();
 
 function syncUserBase(){
 
