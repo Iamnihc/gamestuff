@@ -1,14 +1,11 @@
-'use strict';
+//'use strict';
 // this makes me not hate javascript anymore
 enum games{
   empty,
   connect4
 }
 const servername = "TEST SEVER"
-interface authpair {
-  uname:string;
-  pin:string;
-}
+
 var fs = require('fs');
 const content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
 interface user{
@@ -21,16 +18,18 @@ function syncUserBase(){
 
   try {
     var data = fs.readFileSync('./users.json');
-    users = JSON.parse(data);
-    console.dir(users);
-    return users;
+    var list = JSON.parse(data);
+    console.dir(list);
+    return list;
   }
   catch (err ) {
     // i know this throws an error if the file doesnt exist but thats ok for now
     console.log('There has been an error parsing your JSON.')
     console.log(err);
     return [];
+    
   }
+  return [];
 }
 
 function saveUserBase(){
@@ -69,12 +68,12 @@ var http = require('http');
 
 var file = new(fileserver.Server)();
 
-const mightwork = http.createServer(function (req:any, res:any) {
+const tempserver = http.createServer(function (req:any, res:any) {
   file.serve(req, res);
-  console.log("Debug attached at http://localhost:80. NOT PRODUCTION")
+  console.log("Debug attached at http://localhost:8080. NOT PRODUCTION")
 }).listen(8080);
 
-const io = require('socket.io')(mightwork);
+const io = require('socket.io')(tempserver);
 
 io.on('connect', (socket:any) => {
   playernum++;
@@ -90,15 +89,15 @@ io.on('connect', (socket:any) => {
       socket.emit('makepin', data)
     }
   });
-  socket.on('usercreate', (data:authpair) =>{
-    users.push(user(data.uname, parseInt(data.pin)));
+  socket.on('usercreate', (data:user) =>{
+    users.push(user(data.name, data.pin));
     console.log(users);
     console.log(data);
     saveUserBase();
   });
-  socket.on('auth', (data:authpair) =>{
+  socket.on('auth', (data:user) =>{
     console.log(users);
-    let loginuser = user(data.uname, parseInt(data.pin));
+    let loginuser = user(data.name, data.pin);
     if (users.includes(loginuser)){
       console.log("logged in as " + loginuser.name);
     }

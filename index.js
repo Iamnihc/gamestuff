@@ -1,4 +1,5 @@
-'use strict';
+"use strict";
+//'use strict';
 // this makes me not hate javascript anymore
 var games;
 (function (games) {
@@ -12,9 +13,9 @@ var users = syncUserBase();
 function syncUserBase() {
     try {
         var data = fs.readFileSync('./users.json');
-        users = JSON.parse(data);
-        console.dir(users);
-        return users;
+        var list = JSON.parse(data);
+        console.dir(list);
+        return list;
     }
     catch (err) {
         // i know this throws an error if the file doesnt exist but thats ok for now
@@ -22,6 +23,7 @@ function syncUserBase() {
         console.log(err);
         return [];
     }
+    return [];
 }
 function saveUserBase() {
     var data = JSON.stringify(users);
@@ -48,11 +50,11 @@ var playernum = 0;
 var fileserver = require('node-static');
 var http = require('http');
 var file = new (fileserver.Server)();
-var mightwork = http.createServer(function (req, res) {
+var tempserver = http.createServer(function (req, res) {
     file.serve(req, res);
-    console.log("Debug attached at http://localhost:80. NOT PRODUCTION");
+    console.log("Debug attached at http://localhost:8080. NOT PRODUCTION");
 }).listen(8080);
-var io = require('socket.io')(mightwork);
+var io = require('socket.io')(tempserver);
 io.on('connect', function (socket) {
     playernum++;
     console.log('connected');
@@ -68,14 +70,14 @@ io.on('connect', function (socket) {
         }
     });
     socket.on('usercreate', function (data) {
-        users.push(user(data.uname, parseInt(data.pin)));
+        users.push(user(data.name, data.pin));
         console.log(users);
         console.log(data);
         saveUserBase();
     });
     socket.on('auth', function (data) {
         console.log(users);
-        var loginuser = user(data.uname, parseInt(data.pin));
+        var loginuser = user(data.name, data.pin);
         if (users.includes(loginuser)) {
             console.log("logged in as " + loginuser.name);
         }
