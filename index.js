@@ -1,12 +1,14 @@
-"use strict";
-//'use strict';
+'use strict';
 // this makes me not hate javascript anymore
+// Debug for now
+var debug = true;
+// List of games
 var games;
 (function (games) {
     games[games["empty"] = 0] = "empty";
     games[games["connect4"] = 1] = "connect4";
 })(games || (games = {}));
-var servername = "TEST SEVER";
+var port = debug ? 8080 : 80;
 var fs = require('fs');
 var content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
 var users = syncUserBase();
@@ -36,30 +38,24 @@ function saveUserBase() {
         console.log('Configuration saved successfully.');
     });
 }
-function makeroom(roomnum, gametype, players) {
-    if (gametype === void 0) { gametype = games.empty; }
-    if (players === void 0) { players = []; }
-    return { roomnum: roomnum, gametype: gametype, players: players };
-}
 function user(name, pin) {
     if (pin === void 0) { pin = 1234; }
     return ({ name: name, pin: pin });
 }
-var rooms = [makeroom(1)];
 var playernum = 0;
 var fileserver = require('node-static');
 var http = require('http');
 var file = new (fileserver.Server)();
 var tempserver = http.createServer(function (req, res) {
     file.serve(req, res);
-    console.log("Debug attached at http://localhost:8080. NOT PRODUCTION");
+    console.log("Debug attached at http://localhost:" + port + (debug ? " NOT " : " ") + "PRODUCTION");
 }).listen(8080);
 var io = require('socket.io')(tempserver);
 io.on('connect', function (socket) {
     playernum++;
     console.log('connected');
     socket.emit();
-    socket.emit('setup', servername + "player number " + playernum);
+    socket.emit('setup', (debug ? "debug" : "prodution") + " server. player number " + playernum);
     socket.on('user', function (data) {
         console.log("trying to login as " + data);
         if (users.some(function (x) { return x.name == data; })) {

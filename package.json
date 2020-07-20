@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/Iamnihc/gamestuff/issues"
   },
-  "homepage": "https://github.com/Iamnihc/gamestuff#readme"
+  "homepage": "https://github.com/Iamnihc/gamestuff#readme",
+  "dependencies": {
+    "typescript": "^3.9.7"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.0.0-pre.52"
+  }
 }

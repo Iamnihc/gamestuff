@@ -1,10 +1,16 @@
-//'use strict';
+'use strict';
 // this makes me not hate javascript anymore
+
+// Debug for now
+const debug =true;
+
+// List of games
 enum games{
   empty,
   connect4
 }
-const servername = "TEST SEVER"
+
+const port = debug? 8080:80;
 
 var fs = require('fs');
 
@@ -51,20 +57,15 @@ interface room{
   roomnum : number;
   gametype:games ;
   players:user[] ;
-
-
+  spectators: user[];
+  
 }
-function makeroom(roomnum:number, gametype:games = games.empty, players:user[]=[]):room{
-  return {roomnum, gametype,players};
-}
+
 function user(name : string, pin:number=1234){
   return( {name,pin} );
 }
 
-var rooms:room[] = [makeroom(1)] ;
 var playernum = 0;
-
-
 
 var fileserver = require('node-static');
 var http = require('http');
@@ -73,7 +74,7 @@ var file = new(fileserver.Server)();
 
 const tempserver = http.createServer(function (req:any, res:any) {
   file.serve(req, res);
-  console.log("Debug attached at http://localhost:8080. NOT PRODUCTION")
+  console.log("Debug attached at http://localhost:" + port + (debug? " NOT ": " ")+ "PRODUCTION")
 }).listen(8080);
 
 const io = require('socket.io')(tempserver);
@@ -82,7 +83,7 @@ io.on('connect', (socket:any) => {
   playernum++;
   console.log('connected');
   socket.emit()
-  socket.emit('setup', servername + "player number "+ playernum);
+  socket.emit('setup', (debug? "debug":"prodution") + " server. player number "+ playernum);
   socket.on('user', (data:string) => {
     console.log("trying to login as " + data);
     if (users.some(x => x.name == data)){

@@ -4,3 +4,4 @@
 users.json	
 # DONT SHARE KEYS!!!!	
 *.pem 
+node_modules
