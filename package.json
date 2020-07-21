@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/Iamnihc/gamestuff#readme",
   "dependencies": {
-    "typescript": "^3.9.7"
+    "@types/uuid": "^8.0.0",
+    "typescript": "^3.9.7",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "ts-node-dev": "^1.0.0-pre.52"
