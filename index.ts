@@ -11,36 +11,52 @@ const debug =true;
 // im still working this one out... i think each player gets n number of rooms tho
 
 // users
-interface authpair{
-  name:string;
-  pin:number;
+
+class authpair{
+  public name:string;
+  public pin:number;
+  constructor(name:string, pin:number){
+    this.name=name;
+    this.pin=pin;
+  }
+
 }
-interface user{
-  auth: authpair;
-  uuid:string;
-  online:boolean;
-  roomlist: string[];
+class user{
+  public auth: authpair;
+  public uuid:string;
+  public online:boolean;
+  public roomlist: string[];
+  constructor(auth:authpair){
+    this.auth=auth;
+    this.uuid=uuidv4();
+    this.online=true;
+    this.roomlist = [];
+  }
   
 }
 // List of games
 import * as games from "./games";
 
 
-interface room{
-  owner:user;
-  private:boolean;
+class  room{
+  public owner:user;
+  public isPrivate:boolean;
   spectateAllowed:boolean;
   roomNum:number;
   maxPlayers:number;
   players:user[];
   audience:user[];
   data:games.gamePackage;
+
 }
 
 
 // user generator
-function user(name : string, pin:number=1234){
-  return( {name,pin} );
+function makeuser(auth:authpair):user{
+  let uuid=uuidv4()
+  let online = true;
+  let roomlist = new Array<string>()
+  return( {auth,uuid,online, roomlist} );
 }
 
 // Server stuff
@@ -109,7 +125,7 @@ io.on('connect', (socket:any) => {
     }
   });
   socket.on('usercreate', (data:user) =>{
-    users.push(user(data.name, data.pin));
+    users.push(user(authpair(name, pin)));
     console.log(users);
     console.log(data);
     saveUserBase();

@@ -1,16 +1,28 @@
 'use strict';
-// this makes me not hate javascript anymore
+Object.defineProperty(exports, "__esModule", { value: true });
+// for now this is the only "option"
+// maybe later ill add options.json or something like that
 // Debug for now
 var debug = true;
-// List of games
-var games;
-(function (games) {
-    games[games["empty"] = 0] = "empty";
-    games[games["connect4"] = 1] = "connect4";
-})(games || (games = {}));
+// user generator
+function user(name, pin) {
+    if (pin === void 0) { pin = 1234; }
+    return ({ name: name, pin: pin });
+}
+// Server stuff
 var port = debug ? 8080 : 80;
-var fs = require('fs');
 var content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
+var fileserver = require('node-static');
+var http = require('http');
+var file = new (fileserver.Server)();
+var tempserver = http.createServer(function (req, res) {
+    file.serve(req, res);
+    console.log("Debug attached at http://localhost:" + port + (debug ? " NOT " : " ") + "PRODUCTION");
+}).listen(8080);
+var io = require('socket.io')(tempserver);
+// function things
+// save and read
+var fs = require('fs');
 var users = syncUserBase();
 function syncUserBase() {
     try {
@@ -38,27 +50,17 @@ function saveUserBase() {
         console.log('Configuration saved successfully.');
     });
 }
-function user(name, pin) {
-    if (pin === void 0) { pin = 1234; }
-    return ({ name: name, pin: pin });
-}
 var playernum = 0;
-var fileserver = require('node-static');
-var http = require('http');
-var file = new (fileserver.Server)();
-var tempserver = http.createServer(function (req, res) {
-    file.serve(req, res);
-    console.log("Debug attached at http://localhost:" + port + (debug ? " NOT " : " ") + "PRODUCTION");
-}).listen(8080);
-var io = require('socket.io')(tempserver);
 io.on('connect', function (socket) {
+    // connect a user
     playernum++;
     console.log('connected');
     socket.emit();
     socket.emit('setup', (debug ? "debug" : "prodution") + " server. player number " + playernum);
+    // get username
     socket.on('user', function (data) {
         console.log("trying to login as " + data);
-        if (users.some(function (x) { return x.name == data; })) {
+        if (users.some(function (x) { return x.auth.name == data; })) {
             socket.emit('pin', data);
         }
         else {
@@ -73,6 +75,7 @@ io.on('connect', function (socket) {
     });
     socket.on('auth', function (data) {
         console.log(users);
+        socket.emit("uuid");
         var loginuser = user(data.name, data.pin);
         if (users.includes(loginuser)) {
             console.log("logged in as " + loginuser.name);
