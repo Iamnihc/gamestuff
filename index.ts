@@ -39,14 +39,11 @@ import * as games from "./games";
 
 
 class  room{
-  public owner:user;
-  public isPrivate:boolean;
-  spectateAllowed:boolean;
-  roomNum:number;
-  maxPlayers:number;
-  players:user[];
-  audience:user[];
-  data:games.gamePackage;
+  public roomNum:string;
+  public data:games.gamePackage;
+  constructor(){
+
+  }
 
 }
 
