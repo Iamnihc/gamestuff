@@ -91,6 +91,7 @@ function syncUserBase(){
   }
   return [];
 }
+
 function saveUserBase(){
   var data = JSON.stringify(users);
   fs.writeFile('./users.json', data, function (err:Error) {
@@ -110,8 +111,11 @@ io.on('connect', (socket:any) => {
   playernum++;
   console.log('connected');
   socket.emit()
-  socket.emit('setup', (debug? "debug":"prodution") + " server. player number "+ playernum);
-  if (!refreshed){refreshed = true; socket.broadcast.emit('refresh');}
+  socket.emit('setup', (debug? "debug":"prodution") + " server. player number "+ playernum );
+  if (!refreshed){
+    refreshed = true; 
+    io.emit('refresh');
+  }
   // get username
   socket.on('user', (data:string) => {
     console.log("trying to login as " + data);

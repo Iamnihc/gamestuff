@@ -69,6 +69,7 @@ function syncUserBase() {
     }
     return [];
 }
+
 function saveUserBase() {
     var data = JSON.stringify(users);
     fs.writeFile('./users.json', data, function (err) {

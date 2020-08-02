@@ -1,6 +1,6 @@
 {
-  "watch": ["*.ts","ps.js","index.html"],
+  "watch": ["src","ps.js","index.html", "index.ts", "games.ts"],
   "ext": "ts",
-  "ignore": ["src/**/*.spec.ts"],
+  "ignore": [""],
   "exec": "npx ts-node ./index.ts"
 }

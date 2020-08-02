@@ -7,8 +7,13 @@ const $events = document.getElementById('events');
         };
 
         const socket = io();
-
+        socket.on('refresh', ()=>{
+          console.log("server side change??");
+          location.reload(true);
+        })
+        
         socket.on('connect', () => {
+          console.log("connect???")
           $events.appendChild(newItem('connected to game server'));
         });
 
@@ -35,7 +40,7 @@ const $events = document.getElementById('events');
             do {var pin = prompt("user does not exist. enter pin");}
             while (pin.length == 4 && Number.isInteger(pin) && pin>=0);
           pin = parseInt(pin);
-          alert("your pin is now " + pin + " you can not change it");
-          socket.emit('usercreate',{name, pin });
+          alert(uname +  " :your pin is now " + pin + " you can not change it");
+          socket.emit('usercreate',{uname, pin });
         });
         
