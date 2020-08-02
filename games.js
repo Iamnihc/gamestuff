@@ -19,25 +19,35 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.gamePackage = void 0;
+var messageTemplate = /** @class */ (function () {
+    function messageTemplate(sender, message) {
+        this.sender = sender;
+        this.message = message;
+        this.timeMS = new Date();
+        this.humanTime = this.timeMS.toDateString();
+    }
+    return messageTemplate;
+}());
 var gamePackage = /** @class */ (function () {
     function gamePackage(owner, players, audience, lockplayers, lockaudience) {
         if (players === void 0) { players = []; }
         if (audience === void 0) { audience = true; }
         if (lockplayers === void 0) { lockplayers = false; }
         if (lockaudience === void 0) { lockaudience = false; }
-        this.gameInfo();
         this.owner = owner;
+        this.currentPlayerNum = 0;
         this.AllowAudience = audience;
         this.aproveAudience = lockaudience;
         this.aprovePlayers = lockplayers;
         this.players = __spreadArrays([owner], players);
         this.playerCount = this.updatePlayerCount();
     }
-    gamePackage.prototype.gameInfo = function () {
-    };
     gamePackage.prototype.updatePlayerCount = function () { return this.players.length; };
+    gamePackage.prototype.addPlayer = function (newPlayer) {
+        this.players.push(newPlayer);
+    };
     return gamePackage;
 }());
 exports.gamePackage = gamePackage;
@@ -48,15 +58,46 @@ var chat = /** @class */ (function (_super) {
         _this.gameName = "chat";
         _this.maxPlayers = 0;
         _this.minPlayers = 2;
-        _this.mesasges = [];
+        _this.turnlock = false;
+        _this.mesasges = new Array();
         _this.lastMessages = new Array(_this.players.length);
         return _this;
     }
-    chat.prototype.getLatestPlayerData = function (player) {
-        return this.mesasges.slice(this.lastMessages[player]);
+    chat.prototype.addPlayer = function (newPlayer) {
+        _super.prototype.addPlayer.call(this, newPlayer);
+        this.lastMessages.push(0);
+    };
+    chat.prototype.getLatestPlayerData = function (playerNumber) {
+        return this.mesasges.slice(this.lastMessages[playerNumber]);
+        this.lastMessages[playerNumber] = this.mesasges.length;
     };
     chat.prototype.getAllPlayerData = function (player) {
         return this.mesasges;
     };
+    chat.prototype.playerTurn = function (player, turndata) {
+        this.mesasges.push(turndata);
+        return true;
+    };
     return chat;
+}(gamePackage));
+var nogame = /** @class */ (function (_super) {
+    __extends(nogame, _super);
+    function nogame() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.gameName = "Select a game";
+        _this.maxPlayers = 1;
+        _this.minPlayers = 1;
+        _this.turnlock = false;
+        return _this;
+    }
+    nogame.prototype.getAllPlayerData = function (player) {
+        return "";
+    };
+    nogame.prototype.getLatestPlayerData = function () {
+        return "";
+    };
+    nogame.prototype.playerTurn = function () {
+        return true;
+    };
+    return nogame;
 }(gamePackage));

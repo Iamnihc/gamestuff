@@ -13,6 +13,19 @@ interface user{
   
 }
 
+class messageTemplate{
+    public sender:user;
+    public message:string;
+    public timeMS:Date;
+    public humanTime:string
+    constructor(sender:user,message:string ){
+      this.sender= sender;
+      this.message = message;
+      this.timeMS = new Date();
+      this.humanTime=this.timeMS.toDateString();
+    }
+}
+
 
 abstract class gamePackage{
     abstract gameName:string;
@@ -43,6 +56,8 @@ abstract class gamePackage{
     }
     abstract getLatestPlayerData(player:number):any;
     abstract getAllPlayerData(player:number):any;
+    // returns true if turn is valid and successful; false otherwise.
+    abstract playerTurn (player:number, turndata:any):boolean;
   }
 
 class chat extends gamePackage{
@@ -50,8 +65,10 @@ class chat extends gamePackage{
   maxPlayers = 0;
   minPlayers = 2;
   turnlock = false;
-  private mesasges = [];
+  private mesasges = new Array<messageTemplate>();
   private lastMessages= new Array<number>(this.players.length);
+ 
+  
   addPlayer(newPlayer:user){
     super.addPlayer(newPlayer);
     this.lastMessages.push(0);
@@ -63,16 +80,24 @@ class chat extends gamePackage{
   getAllPlayerData(player:number):any{
     return this.mesasges;
   }
+  playerTurn(player:number, turndata:messageTemplate):boolean{
+    this.mesasges.push(turndata)
+    return true;
+  }
 }
 class nogame extends gamePackage{
   gameName = "Select a game";
   maxPlayers=1;
   minPlayers =1;
+  turnlock= false;
   getAllPlayerData(player:number){
     return "";
   }
   getLatestPlayerData(){
     return "";
+  }
+  playerTurn(){
+    return true;
   }
 }
 export {gamePackage};

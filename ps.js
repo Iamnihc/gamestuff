@@ -38,3 +38,4 @@ const $events = document.getElementById('events');
           alert("your pin is now " + pin + " you can not change it");
           socket.emit('usercreate',{name, pin });
         });
+        

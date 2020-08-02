@@ -1,13 +1,43 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
+// this makes me not hate javascript anymore
+var uuid_1 = require("uuid");
 // for now this is the only "option"
 // maybe later ill add options.json or something like that
 // Debug for now
 var debug = true;
+// interfaces and stuff
+// im still working this one out... i think each player gets n number of rooms tho
+// users
+var authpair = /** @class */ (function () {
+    function authpair(name, pin) {
+        this.name = name;
+        this.pin = pin;
+    }
+    return authpair;
+}());
+var user = /** @class */ (function () {
+    function user(auth) {
+        this.auth = auth;
+        this.uuid = uuid_1.v4();
+        this.online = true;
+        this.roomlist = [];
+    }
+    return user;
+}());
+var room = /** @class */ (function () {
+    function room(gamedata) {
+        this.roomNum = uuid_1.v4();
+        this.data = gamedata;
+    }
+    return room;
+}());
 // user generator
-function user(name, pin) {
-    if (pin === void 0) { pin = 1234; }
-    return ({ name: name, pin: pin });
+function makeuser(auth) {
+    var uuid = uuid_1.v4();
+    var online = true;
+    var roomlist = new Array();
+    return ({ auth: auth, uuid: uuid, online: online, roomlist: roomlist });
 }
 // Server stuff
 var port = debug ? 8080 : 80;
@@ -68,7 +98,7 @@ io.on('connect', function (socket) {
         }
     });
     socket.on('usercreate', function (data) {
-        users.push(user(data.name, data.pin));
+        users.push(new user(data));
         console.log(users);
         console.log(data);
         saveUserBase();
@@ -76,8 +106,8 @@ io.on('connect', function (socket) {
     socket.on('auth', function (data) {
         console.log(users);
         socket.emit("uuid");
-        var loginuser = user(data.name, data.pin);
-        if (users.includes(loginuser)) {
+        var loginuser = data;
+        if (users.some(function (user) { return user.auth == loginuser; })) {
             console.log("logged in as " + loginuser.name);
         }
     });

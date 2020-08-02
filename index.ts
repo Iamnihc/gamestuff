@@ -41,8 +41,9 @@ import * as games from "./games";
 class  room{
   public roomNum:string;
   public data:games.gamePackage;
-  constructor(){
-
+  constructor(gamedata:games.gamePackage){
+    this.roomNum = uuidv4();
+    this.data=gamedata;
   }
 
 }
@@ -103,14 +104,14 @@ function saveUserBase(){
 }
 
 var playernum = 0;
-
+var refreshed = false;
 io.on('connect', (socket:any) => {
   // connect a user
   playernum++;
   console.log('connected');
   socket.emit()
   socket.emit('setup', (debug? "debug":"prodution") + " server. player number "+ playernum);
-
+  if (!refreshed){refreshed = true; socket.broadcast.emit('refresh');}
   // get username
   socket.on('user', (data:string) => {
     console.log("trying to login as " + data);
@@ -121,17 +122,17 @@ io.on('connect', (socket:any) => {
       socket.emit('makepin', data)
     }
   });
-  socket.on('usercreate', (data:user) =>{
-    users.push(user(authpair(name, pin)));
+  socket.on('usercreate', (data:authpair) =>{
+    users.push(new user(data));
     console.log(users);
     console.log(data);
     saveUserBase();
   });
-  socket.on('auth', (data:user) =>{
+  socket.on('auth', (data:authpair) =>{
     console.log(users);
     socket.emit("uuid", )
-    let loginuser = user(data.name, data.pin);
-    if (users.includes(loginuser)){
+    let loginuser:authpair = data;
+    if (users.some(user=> user.auth == loginuser)){
       console.log("logged in as " + loginuser.name);
     }
   })
