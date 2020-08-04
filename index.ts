@@ -13,10 +13,10 @@ const debug =true;
 // users
 
 class authpair{
-  public name:string;
+  public uname:string;
   public pin:number;
   constructor(name:string, pin:number){
-    this.name=name;
+    this.uname=name;
     this.pin=pin;
   }
 
@@ -119,7 +119,7 @@ io.on('connect', (socket:any) => {
   // get username
   socket.on('user', (data:string) => {
     console.log("trying to login as " + data);
-    if (users.some(x => x.auth.name == data)){
+    if (users.some(x => x.auth.uname == data)){
       socket.emit('pin',data);
     }
     else{
@@ -137,7 +137,7 @@ io.on('connect', (socket:any) => {
     socket.emit("uuid", )
     let loginuser:authpair = data;
     if (users.some(user=> user.auth == loginuser)){
-      console.log("logged in as " + loginuser.name);
+      console.log("logged in as " + loginuser.uname);
     }
   })
 });
