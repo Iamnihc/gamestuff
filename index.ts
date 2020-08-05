@@ -26,11 +26,13 @@ class user{
   public uuid:string;
   public online:boolean;
   public roomlist: string[];
+  public sessionid:string;
   constructor(auth:authpair){
     this.auth=auth;
     this.uuid=uuidv4();
-    this.online=true;
+    this.online=false;
     this.roomlist = [];
+    this.sessionid = "";
   }
   
 }
@@ -49,13 +51,7 @@ class  room{
 }
 
 
-// user generator
-function makeuser(auth:authpair):user{
-  let uuid=uuidv4()
-  let online = true;
-  let roomlist = new Array<string>()
-  return( {auth,uuid,online, roomlist} );
-}
+
 
 // Server stuff
 
@@ -106,7 +102,12 @@ function saveUserBase(){
 
 var playernum = 0;
 var refreshed = false;
+
+
+
 io.on('connect', (socket:any) => {
+  let connected:user;
+
   // connect a user
   playernum++;
   console.log('connected');
@@ -116,6 +117,7 @@ io.on('connect', (socket:any) => {
     refreshed = true; 
     io.emit('refresh');
   }
+  
   // get username
   socket.on('user', (data:string) => {
     console.log("trying to login as " + data);
@@ -132,12 +134,25 @@ io.on('connect', (socket:any) => {
     console.log(data);
     saveUserBase();
   });
+
   socket.on('auth', (data:authpair) =>{
     console.log(users);
-    socket.emit("uuid", )
+    socket.emit("uuid",)
     let loginuser:authpair = data;
-    if (users.some(user=> user.auth == loginuser)){
+    let possibleuser = undefined;
+    possibleuser = users.find(x=> x.auth= loginuser);
+    if (possibleuser!=undefined){
       console.log("logged in as " + loginuser.uname);
+      
+      connected = possibleuser;
+      connected.online = true;
+      connected.sessionid = uuidv4();
+      socket.on('disconnect', function () {
+        connected.online=false;
+        connected.sessionid="";
+        console.log(users);
+      });
+      socket.emit("login", connected.sessionid);
     }
   })
 });
