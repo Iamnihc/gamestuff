@@ -1,58 +1,15 @@
 'use strict';
 // ^ this makes me not hate javascript anymore
 
-
 import { v4 as uuidv4 } from 'uuid';
-// List of games
-import * as games from "./games";
+
+// List of things
+import {User,AuthPair,Room,MessageTemplate, GamePackage, Chat, NoGame, ConnectFour, GameList} from "./classdefs";
 // for now this is the only "option"
 // maybe later ill add options.json or something like that
 // Debug for now
 const debug =true;
 var roomlist:Array<Room> = [];
-
-// interfaces and stuff
-// im still working this one out... i think each player gets n number of rooms tho
-
-// users
-
-class AuthPair{
-  public uname:string;
-  public pin:number;
-  constructor(name:string, pin:number){
-    this.uname=name;
-    this.pin=pin;
-  }
-
-}
-class User{
-  public auth: AuthPair;
-  public uuid:string;
-  public online:boolean;
-  public roomList: string[];
-  public sessionID:string;
-  constructor(auth:AuthPair){
-    this.auth=auth;
-    this.uuid=uuidv4();
-    this.online=false;
-    this.roomList = [];
-    this.sessionID = "";
-  }
-  
-}
-
-
-
-class Room{
-  public roomNum:string;
-  public data:games.gamePackage;
-  constructor(gameData:games.gamePackage){
-    this.roomNum = uuidv4();
-    this.data=gameData;
-  }
-
-}
-
 
 // Server stuff
 

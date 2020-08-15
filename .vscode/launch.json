@@ -11,7 +11,22 @@
         "runtimeExecutable": "nodemon",
         "restart": true,
         "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen"
+        "internalConsoleOptions": "neverOpen",
+        "program": "./src/index.ts",
+        "args": [ "-e ts", "-L"]
+      },
+      {
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen",
+        "name": "nodemon",
+        "program": "${workspaceFolder}/src/index.ts",
+        "request": "launch",
+        "restart": true,
+        "runtimeExecutable": "nodemon",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "type": "pwa-node"
       }
     ]
   }
