@@ -1,24 +1,37 @@
 'use strict';
-
+import { v4 as uuidv4 } from 'uuid';
 // definitions from index that we need
-interface authpair{
-  name:string;
-  pin:number;
+class AuthPair{
+  public uname:string;
+  public pin:number;
+  constructor(name:string, pin:number){
+    this.uname=name;
+    this.pin=pin;
+  }
+
 }
-interface user{
-  auth: authpair;
-  uuid:string;
-  online:boolean;
-  roomlist: string[];
+class User{
+  public auth: AuthPair;
+  public uuid:string;
+  public online:boolean;
+  public roomlist: string[];
+  public sessionid:string;
+  constructor(auth:AuthPair){
+    this.auth=auth;
+    this.uuid=uuidv4();
+    this.online=false;
+    this.roomlist = [];
+    this.sessionid = "";
+  }
   
 }
 
-class messageTemplate{
-    public sender:user;
+class MessageTemplate{
+    public sender:User;
     public message:string;
     public timeMS:Date;
     public humanTime:string
-    constructor(sender:user,message:string ){
+    constructor(sender:User,message:string ){
       this.sender= sender;
       this.message = message;
       this.timeMS = new Date();
@@ -37,10 +50,10 @@ abstract class gamePackage{
     private aprovePlayers: boolean;
     private aproveAudience:boolean;
     // This might cause problems. If there are problems they are here
-    readonly owner: user;
+    readonly owner: User;
     private playerCount:number;
-    protected  players:user[];
-    constructor(owner: user,players:user[]=[], audience:boolean=true, lockplayers:boolean=false, lockaudience:boolean=false){
+    protected  players:User[];
+    constructor(owner: User,players:User[]=[], audience:boolean=true, lockplayers:boolean=false, lockaudience:boolean=false){
         this.owner = owner;
         this.currentPlayerNum = 0;
         this.AllowAudience=audience;
@@ -51,7 +64,7 @@ abstract class gamePackage{
     }
 
     updatePlayerCount():number{ return this.players.length;}
-    addPlayer( newPlayer:user){
+    addPlayer( newPlayer:User){
       this.players.push(newPlayer);
     }
     abstract getLatestPlayerData(player:number):any;
@@ -65,11 +78,11 @@ class chat extends gamePackage{
   maxPlayers = 0;
   minPlayers = 2;
   turnlock = false;
-  private mesasges = new Array<messageTemplate>();
+  private mesasges = new Array<MessageTemplate>();
   private lastMessages= new Array<number>(this.players.length);
  
   
-  addPlayer(newPlayer:user){
+  addPlayer(newPlayer:User){
     super.addPlayer(newPlayer);
     this.lastMessages.push(0);
   }
@@ -80,7 +93,7 @@ class chat extends gamePackage{
   getAllPlayerData(player:number):any{
     return this.mesasges;
   }
-  playerTurn(player:number, turndata:messageTemplate):boolean{
+  playerTurn(player:number, turndata:MessageTemplate):boolean{
     this.mesasges.push(turndata)
     return true;
   }

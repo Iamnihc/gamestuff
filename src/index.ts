@@ -1,18 +1,22 @@
 'use strict';
-// this makes me not hate javascript anymore
+// ^ this makes me not hate javascript anymore
+
+
 import { v4 as uuidv4 } from 'uuid';
+// List of games
+import * as games from "./games";
 // for now this is the only "option"
 // maybe later ill add options.json or something like that
 // Debug for now
 const debug =true;
-
+var roomlist:Array<Room> = [];
 
 // interfaces and stuff
 // im still working this one out... i think each player gets n number of rooms tho
 
 // users
 
-class authpair{
+class AuthPair{
   public uname:string;
   public pin:number;
   constructor(name:string, pin:number){
@@ -21,45 +25,42 @@ class authpair{
   }
 
 }
-class user{
-  public auth: authpair;
+class User{
+  public auth: AuthPair;
   public uuid:string;
   public online:boolean;
-  public roomlist: string[];
-  public sessionid:string;
-  constructor(auth:authpair){
+  public roomList: string[];
+  public sessionID:string;
+  constructor(auth:AuthPair){
     this.auth=auth;
     this.uuid=uuidv4();
     this.online=false;
-    this.roomlist = [];
-    this.sessionid = "";
+    this.roomList = [];
+    this.sessionID = "";
   }
   
 }
-// List of games
-import * as games from "./games";
 
 
-class  room{
+
+class Room{
   public roomNum:string;
   public data:games.gamePackage;
-  constructor(gamedata:games.gamePackage){
+  constructor(gameData:games.gamePackage){
     this.roomNum = uuidv4();
-    this.data=gamedata;
+    this.data=gameData;
   }
 
 }
-
-
 
 
 // Server stuff
 
 const port = debug? 8080:80;
 const content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
-var fileserver = require('node-static');
+var fileServer = require('node-static');
 var http = require('http');
-var file = new(fileserver.Server)();
+var file = new(fileServer.Server)();
 const tempserver = http.createServer(function (req:any, res:any) {
   file.serve(req, res);
   console.log("Debug attached at http://localhost:" + port + (debug? " NOT ": " ")+ "PRODUCTION")
@@ -70,7 +71,7 @@ const io = require('socket.io')(tempserver);
 
 // save and read
 var fs = require('fs');
-var users : user[] = syncUserBase();
+var users : User[] = syncUserBase();
 function syncUserBase(){
   try {
     var data = fs.readFileSync('src/users.json');
@@ -100,19 +101,19 @@ function saveUserBase(){
   });
 }
 
-var playernum = 0;
+var playerNum = 0;
 var refreshed = false;
 
 
 
 io.on('connect', (socket:any) => {
-  let connected:user;
+  let connected:User;
 
   // connect a user
-  playernum++;
+  playerNum++;
   console.log('connected');
   socket.emit()
-  socket.emit('setup', (debug? "debug":"prodution") + " server. player number "+ playernum );
+  socket.emit('setup', (debug? "debug":"prodution") + " server. player number "+ playerNum );
   if (!refreshed){
     refreshed = true; 
     io.emit('refresh');
@@ -128,31 +129,31 @@ io.on('connect', (socket:any) => {
       socket.emit('makepin', data)
     }
   });
-  socket.on('usercreate', (data:authpair) =>{
-    users.push(new user(data));
+  socket.on('usercreate', (data:AuthPair) =>{
+    users.push(new User(data));
     console.log(users);
     console.log(data);
     saveUserBase();
   });
 
-  socket.on('auth', (data:authpair) =>{
+  socket.on('auth', (data:AuthPair) =>{
     console.log(users);
     socket.emit("uuid",)
-    let loginuser:authpair = data;
-    let possibleuser = undefined;
-    possibleuser = users.find(x=> x.auth= loginuser);
-    if (possibleuser!=undefined){
-      console.log("logged in as " + loginuser.uname);
+    let loginUser:AuthPair = data;
+    let possibleUser = undefined;
+    possibleUser = users.find(x=> x.auth= loginUser);
+    if (possibleUser!=undefined){
+      console.log("logged in as " + loginUser.uname);
       
-      connected = possibleuser;
+      connected = possibleUser;
       connected.online = true;
-      connected.sessionid = uuidv4();
+      connected.sessionID = uuidv4();
       socket.on('disconnect', function () {
         connected.online=false;
-        connected.sessionid="";
+        connected.sessionID="";
         console.log(users);
       });
-      socket.emit("login", connected.sessionid);
+      socket.emit("login", connected.sessionID);
     }
   })
 });
