@@ -4,7 +4,11 @@
   "description": "its a thing",
   "main": "index.js",
   "dependencies": {
+    "http": "0.0.1-security",
+    "http-server": "^0.12.3",
+    "node-static": "^0.7.11",
     "nodemon": "^2.0.4",
+    "socket.io": "^2.3.0",
     "ts-node": "^8.10.2",
     "ts-node-dev": "^1.0.0-pre.52",
     "tsc": "^1.20150623.0",
@@ -16,8 +20,7 @@
   "scripts": {
     "test": "nodemon src/index.ts",
     "run": "nodemon src/index.ts",
-    "dev":"nodemon src/index.ts -L"
-
+    "dev": "nodemon src/index.ts -L"
   },
   "repository": {
     "type": "git",

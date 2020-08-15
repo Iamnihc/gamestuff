@@ -22,12 +22,12 @@ const port = debug? 8080:80;
 const content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
 var fileServer = require('node-static');
 var http = require('http');
-var file = new(fileServer.Server)();
-const tempserver = http.createServer(function (req:any, res:any) {
+var file = new(fileServer.Server)("./src");
+const tempServer = http.createServer(function (req:any, res:any) {
   file.serve(req, res);
   console.log("Debug attached at http://localhost:" + port + (debug? " NOT ": " ")+ "PRODUCTION")
 }).listen(8080);
-const io = require('socket.io')(tempserver);
+const io = require('socket.io')(tempServer);
 
 // function things
 
@@ -103,7 +103,7 @@ io.on('connect', (socket:any) => {
     socket.emit("uuid",)
     let loginUser:AuthPair = data;
     let possibleUser = undefined;
-    possibleUser = userList.find(x=> x.auth= loginUser);
+    possibleUser = userList.find(x=> x.auth.getName()== loginUser.uname);
     if (possibleUser!=undefined){
       console.log("logged in as " + loginUser.uname);
       

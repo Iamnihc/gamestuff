@@ -41,15 +41,15 @@ function makeuser(auth) {
 }
 // Server stuff
 var port = debug ? 8080 : 80;
-var content = require('fs').readFileSync(__dirname + '/index.html', 'utf8');
-var fileserver = require('node-static');
+var content = require('fs').readFileSync(__dirname + 'src/index.html', 'utf8');
+var fileServer = require('node-static');
 var http = require('http');
-var file = new (fileserver.Server)();
-var tempserver = http.createServer(function (req, res) {
+var file = new (fileServer.Server)();
+var tempServer = http.createServer(function (req, res) {
     file.serve(req, res);
     console.log("Debug attached at http://localhost:" + port + (debug ? " NOT " : " ") + "PRODUCTION");
 }).listen(8080);
-var io = require('socket.io')(tempserver);
+var io = require('socket.io')(tempServer);
 // function things
 // save and read
 var fs = require('fs');

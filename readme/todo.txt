@@ -1,8 +1,11 @@
 make rooms
 split socket on functions up
 make games
+move to express
 make an actual ui
 add discord/other login
+(merge with spotify stuff???)
+(merge with discord bot?????)
 make a pwa
 make electron app
 add discord rich integration 

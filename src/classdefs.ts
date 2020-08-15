@@ -1,4 +1,4 @@
-
+'use strict';
 import { v4 as uuidv4 } from 'uuid';
 
 class User{
@@ -19,10 +19,19 @@ class User{
 
 class AuthPair{
         public uname:string;
-        public pin:number;
+        private pin:number;
         constructor(name:string, pin:number){
           this.uname=name;
           this.pin=pin;
+        }
+        public setPin(pin){
+          this.pin=pin;
+        }
+        public checkAuth(uname,pin){
+          return this.pin==pin && this.uname == uname;
+        }
+        public getName(){
+          return this.uname;
         }
       
 }
@@ -58,21 +67,21 @@ abstract class GamePackage{
     abstract gameName:string;
     abstract maxPlayers:number;
     abstract minPlayers: number;
-    abstract turnlock:boolean;
+    abstract turnLock:boolean;
     private currentPlayerNum:number;
-    private AllowAudience:boolean;
+    private allowAudience:boolean;
     private aprovePlayers: boolean;
     private aproveAudience:boolean;
     // This might cause problems. If there are problems they are here
     readonly owner: User;
     private playerCount:number;
     protected  players:User[];
-    constructor(owner: User,players:User[]=[], audience:boolean=true, lockplayers:boolean=false, lockaudience:boolean=false){
+    constructor(owner: User,players:User[]=[], audience:boolean=true, lockPlayers:boolean=false,  lockAudience:boolean=false){
         this.owner = owner;
         this.currentPlayerNum = 0;
-        this.AllowAudience=audience;
-        this.aproveAudience=lockaudience;
-        this.aprovePlayers=lockplayers;
+        this.allowAudience=audience;
+        this.aproveAudience=lockAudience;
+        this.aprovePlayers=lockPlayers;
         this.players = [owner,...players];
         this.playerCount = this.updatePlayerCount();
     }
@@ -91,7 +100,7 @@ class Chat extends GamePackage{
   gameName = "chat";
   maxPlayers = 0;
   minPlayers = 2;
-  turnlock = false;
+  turnLock = false;
   private mesasges = new Array<MessageTemplate>();
   private lastMessages= new Array<number>(this.players.length);
  
@@ -118,12 +127,12 @@ class NoGame extends GamePackage{
   gameName = "Select a game";
   maxPlayers=1;
   minPlayers =1;
-  turnlock= false;
+  turnLock= false;
   getAllPlayerData(player:number){
-    return "";
+    return "Join A Game";
   }
   getLatestPlayerData(){
-    return "";
+    return "Join A game";
   }
   playerTurn(){
     return true;
@@ -134,7 +143,14 @@ class ConnectFour extends GamePackage{
     gameName: string = "Connect Four";
     maxPlayers: number = 2;
     minPlayers: number = 2;
-    turnlock: boolean = true;
+    turnLock: boolean = true;
+    boardArr:Array<Array<number>>=[];
+    constructor(owner: User,players:User[]=[], audience:boolean=true, lockPlayers:boolean=false, lockAudience:boolean=false){
+        super(owner, players, audience,lockPlayers, lockAudience );
+        for (let i = 0; i<7; i++){
+
+        }
+    }
     getLatestPlayerData(player: number) {
         throw new Error("Method not implemented.");
     }

@@ -1,0 +1,27 @@
+html{
+    height:100%;
+    padding:0%!important;
+    margin:0%!important;
+}
+
+body{
+    height:100%;
+    padding:0%!important;
+    margin:0%!important;
+
+}
+.gameBox{
+    display:flex;
+    flex-direction: row;
+    width:100%;
+    height:100%;
+    background-color:lightgray;
+    flex-wrap: wrap;
+}
+#theBox{
+    width:100%;
+    height: 10%;
+}
+form{
+    width:100%
+}

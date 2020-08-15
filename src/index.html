@@ -4,13 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Minimal working example</title>
+    <link rel=stylesheet href="style.css">
 </head>
 <body>
+    <div class = gameBox id=userData> 
+    <div id=userInfo>
+      <h1 class=data id=loginNameBox>Name:</h1>
+      <h2 class = data id = RoomBox>Active Rooms: </h2>
+      <h2 class = data id = displayNameBox>Username: </h2>
+      <h2 class = data id = modeBox>Game Mode: </h2> 
+      <h2 class = data id = playerNumberBox>Player Number: </h2> 
+      <h2 class = data id = >Connected to Server?</h2>
+      <h2>Refreshed by server?</h2>
+      <h2>Change Password</h2>
+
+
+    </div>
     <form onsubmit="checkUser(); return false;">
-      <input id="thebox" type="text">
+      <input id="theBox" type="text" placeholder = "Username">
     </form>
     <ul id="events"></ul>
-
+  </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src = "ps.js"></script>
 </body>
