@@ -9,7 +9,12 @@ import {User,AuthPair,Room,MessageTemplate, GamePackage, Chat, NoGame, ConnectFo
 // maybe later ill add options.json or something like that
 // Debug for now
 const debug =true;
-var roomlist:Array<Room> = [];
+var roomList:Array<Room> = [];
+
+
+function getRoom(uuid){
+  return roomList.find(room=> room.roomNum = uuid)
+}
 
 // Server stuff
 
@@ -28,7 +33,7 @@ const io = require('socket.io')(tempserver);
 
 // save and read
 var fs = require('fs');
-var users : User[] = syncUserBase();
+var userList  : User[] = syncUserBase();
 function syncUserBase(){
   try {
     var data = fs.readFileSync('src/users.json');
@@ -47,7 +52,7 @@ function syncUserBase(){
 }
 
 function saveUserBase(){
-  var data = JSON.stringify(users);
+  var data = JSON.stringify(userList);
   fs.writeFile('src/users.json', data, function (err:Error) {
     if (err) {
       console.log('There has been an error saving your user data.');
@@ -79,7 +84,7 @@ io.on('connect', (socket:any) => {
   // get username
   socket.on('user', (data:string) => {
     console.log("trying to login as " + data);
-    if (users.some(x => x.auth.uname == data)){
+    if (userList.some(x => x.auth.uname == data)){
       socket.emit('pin',data);
     }
     else{
@@ -87,18 +92,18 @@ io.on('connect', (socket:any) => {
     }
   });
   socket.on('usercreate', (data:AuthPair) =>{
-    users.push(new User(data));
-    console.log(users);
+    userList.push(new User(data));
+    console.log(userList);
     console.log(data);
     saveUserBase();
   });
 
   socket.on('auth', (data:AuthPair) =>{
-    console.log(users);
+    console.log(userList);
     socket.emit("uuid",)
     let loginUser:AuthPair = data;
     let possibleUser = undefined;
-    possibleUser = users.find(x=> x.auth= loginUser);
+    possibleUser = userList.find(x=> x.auth= loginUser);
     if (possibleUser!=undefined){
       console.log("logged in as " + loginUser.uname);
       
@@ -108,7 +113,7 @@ io.on('connect', (socket:any) => {
       socket.on('disconnect', function () {
         connected.online=false;
         connected.sessionID="";
-        console.log(users);
+        console.log(userList);
       });
       socket.emit("login", connected.sessionID);
     }
