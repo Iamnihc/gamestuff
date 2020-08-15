@@ -3,7 +3,7 @@ split socket on functions up
 make games
 move to express
 make an actual ui
-add discord/other login
+add discord/other login (auth0?)
 (merge with spotify stuff???)
 (merge with discord bot?????)
 make a pwa

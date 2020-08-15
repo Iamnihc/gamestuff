@@ -8,7 +8,7 @@ socket.on('refresh', ()=>{
 
 socket.on('connect', () => {
   console.log("connect???")
-  
+  document.getElementById("isConnectedBox").innnerHTML+="true";
 });
 
 socket.on('setup', (server) => {
