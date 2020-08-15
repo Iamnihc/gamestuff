@@ -1,0 +1,10 @@
+make rooms
+split socket on functions up
+make games
+make an actual ui
+add discord/other login
+make a pwa
+make electron app
+add discord rich integration 
+maybe make a secure login ... or make somebody else do it for u
+maybe some other shit idk
