@@ -73,7 +73,7 @@ var fs = require('fs');
 var users : user[] = syncUserBase();
 function syncUserBase(){
   try {
-    var data = fs.readFileSync('./users.json');
+    var data = fs.readFileSync('src/users.json');
     var list = JSON.parse(data);
     console.dir(list);
     return list;
@@ -90,7 +90,7 @@ function syncUserBase(){
 
 function saveUserBase(){
   var data = JSON.stringify(users);
-  fs.writeFile('./users.json', data, function (err:Error) {
+  fs.writeFile('src/users.json', data, function (err:Error) {
     if (err) {
       console.log('There has been an error saving your user data.');
       console.log(err.message);
