@@ -85,6 +85,8 @@ io.on('connect', (socket:any) => {
     refreshed = true; 
     io.emit('refresh');
   }
+
+  
   
   // get username
   socket.on('user', (data:string) => {
@@ -124,13 +126,13 @@ io.on('connect', (socket:any) => {
       
       connected = possibleUser;
       connected.online = true;
-      connected.sessionID = uuidv4();
+      connected.sessionID = socket.id;
       socket.on('disconnect', function () {
         connected.online=false;
         connected.sessionID="";
         console.log(userList);
       });
-      socket.emit("login", connected.sessionID);
+      socket.emit("login", connected);
     }
   })
 });
