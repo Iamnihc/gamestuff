@@ -1,10 +1,11 @@
-'use strict';
+//'use strict';
 // ^ this makes me not hate javascript anymore
 
 import { v4 as uuidv4 } from 'uuid';
 
 // List of things
 import {User,AuthPair,Room,MessageTemplate, GamePackage, Chat, NoGame, ConnectFour, GameList} from "./classdefs";
+import { isDeepStrictEqual } from 'util';
 // for now this is the only "option"
 // maybe later ill add options.json or something like that
 // Debug for now
@@ -14,6 +15,10 @@ var roomList:Array<Room> = [];
 
 function getRoom(uuid){
   return roomList.find(room=> room.roomNum = uuid)
+}
+class pair{
+  uname:string;
+  pin:number;
 }
 
 // Server stuff
@@ -66,7 +71,7 @@ function saveUserBase(){
 var playerNum = 0;
 var refreshed = false;
 
-
+//userList.forEach(x=>console.log(x.auth))
 
 io.on('connect', (socket:any) => {
   let connected:User;
@@ -91,19 +96,29 @@ io.on('connect', (socket:any) => {
       socket.emit('makepin', data)
     }
   });
-  socket.on('usercreate', (data:AuthPair) =>{
-    userList.push(new User(data));
+  socket.on('usercreate', (data:pair) =>{
+    let test = new AuthPair(data.uname, data.pin)
+    console.log(test.getName());
+    userList.push(new User(test));
     console.log(userList);
-    console.log(data);
-    saveUserBase();
+
+    //saveUserBase();
   });
 
-  socket.on('auth', (data:AuthPair) =>{
+  socket.on('auth', (data:pair) =>{
     console.log(userList);
-    socket.emit("uuid",)
-    let loginUser:AuthPair = data;
+
+    let loginUser:pair = data;
+    console.log("USER!")
+    console.log(loginUser)
     let possibleUser = undefined;
+    console.log("USERNAMES!")
+    userList.forEach(x=> console.log(x.auth.getName()))
+    console.log("looking for ")
+    console.log(loginUser.uname)
+
     possibleUser = userList.find(x=> x.auth.getName()== loginUser.uname);
+    console.log(possibleUser)
     if (possibleUser!=undefined){
       console.log("logged in as " + loginUser.uname);
       

@@ -12,21 +12,21 @@ socket.on('connect', () => {
 });
 
 socket.on('setup', (server) => {
-    $events.appendChild(newItem(`Connected to server: ${server}`));
+  document.getElementById("modeBox").innerHTML=(`Connected to server: ${server}`);
 });
 
 
 function checkUser(){
-  var name = document.getElementById("thebox").value;
+  var name = document.getElementById("theBox").value;
   
   socket.emit("user", name );
   console.log(name);
   return false;
 };
 // The user exists, ask for the pin
-socket.on('pin', (username) =>{
+socket.on('pin', (uname) =>{
   var pin = prompt("user exists. enter pin");
-  socket.emit('auth',{username, pin });
+  socket.emit('auth',{uname, pin });
 });
 // the user does not exist, get the pin
 socket.on('makepin',(uname) =>{
@@ -39,4 +39,9 @@ socket.on('makepin',(uname) =>{
 });
 socket.on("login", data =>{
   
+});
+
+socket.on("*",function(event,data) {
+  console.log(event);
+  console.log(data);
 });

@@ -31,6 +31,7 @@ class AuthPair{
           return this.pin==pin && this.uname == uname;
         }
         public getName(){
+          
           return this.uname;
         }
       

@@ -4,3 +4,4 @@ users.json
 *.pem 
 node_modules
 package*
+vscodeworkspace.code-workspace
