@@ -1,8 +1,12 @@
 'use strict';
 import { v4 as uuidv4 } from 'uuid';
 
+class pair{
+  uname:string;
+  pin:number;
+}
 class User{
-    public auth: AuthPair;
+    private auth: AuthPair;
     public uuid:string;
     public online:boolean;
     public roomList: string[];
@@ -13,6 +17,12 @@ class User{
       this.online=false;
       this.roomList = [];
       this.sessionID = "";
+    }
+    public checkAuth(authCheck:pair){
+      return this.
+    }
+    public getName(){
+      return this.auth.getName();
     }
     
 }
@@ -170,4 +180,4 @@ class GameList{
     c4 = ConnectFour;
     all=[this.chat,this.none,this.c4];
 }
-export {User,AuthPair,Room,MessageTemplate, GamePackage , Chat , NoGame,GameList, ConnectFour };
+export {pair,User,AuthPair,Room,MessageTemplate, GamePackage , Chat , NoGame,GameList, ConnectFour };

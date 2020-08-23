@@ -4,7 +4,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 // List of things
-import {User,AuthPair,Room,MessageTemplate, GamePackage, Chat, NoGame, ConnectFour, GameList} from "./classdefs";
+import {pair, User,AuthPair,Room,MessageTemplate, GamePackage, Chat, NoGame, ConnectFour, GameList} from "./classdefs";
 import { isDeepStrictEqual } from 'util';
 // for now this is the only "option"
 // maybe later ill add options.json or something like that
@@ -16,10 +16,7 @@ var roomList:Array<Room> = [];
 function getRoom(uuid){
   return roomList.find(room=> room.roomNum = uuid)
 }
-class pair{
-  uname:string;
-  pin:number;
-}
+
 
 // Server stuff
 
@@ -86,7 +83,7 @@ io.on('connect', (socket:any) => {
     io.emit('refresh');
   }
 
-  
+
   
   // get username
   socket.on('user', (data:string) => {
