@@ -4,7 +4,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 // List of things
-import {pair, User,AuthPair,Room,MessageTemplate, GamePackage, Chat, NoGame, ConnectFour, GameList} from "./classdefs";
+import {pair, User,AuthPair,Room,MessageTemplate, GamePackage, Chat, NoGame, ConnectFour, getGame} from "./classdefs";
 import { isDeepStrictEqual } from 'util';
 // for now this is the only "option"
 // maybe later ill add options.json or something like that
@@ -17,7 +17,14 @@ function getRoom(uuid){
   return roomList.find(room=> room.roomNum = uuid)
 }
 
+function getOnline(){
+  return userList.map(x=>x.online?x.getName():false).filter(x=> x!=false)
+}
 
+
+function getUser(uid){
+  return userList.find(x=> x.sessionID==uid);
+}
 // Server stuff
 
 const port = debug? 8080:80;
@@ -88,7 +95,7 @@ io.on('connect', (socket:any) => {
   // get username
   socket.on('user', (data:string) => {
     console.log("trying to login as " + data);
-    if (userList.some(x => x.auth.uname == data)){
+    if (userList.some(x => x.getName() == data)){
       socket.emit('pin',data);
     }
     else{
@@ -112,11 +119,11 @@ io.on('connect', (socket:any) => {
     console.log(loginUser)
     let possibleUser = undefined;
     console.log("USERNAMES!")
-    userList.forEach(x=> console.log(x.auth.getName()))
+    userList.forEach(x=> console.log(x.getName()))
     console.log("looking for ")
     console.log(loginUser.uname)
 
-    possibleUser = userList.find(x=> x.auth.getName()== loginUser.uname);
+    possibleUser = userList.find(x=> x.getName()== loginUser.uname);
     console.log(possibleUser)
     if (possibleUser!=undefined){
       console.log("logged in as " + loginUser.uname);
@@ -130,6 +137,12 @@ io.on('connect', (socket:any) => {
         console.log(userList);
       });
       socket.emit("login", connected);
+      socket.emit("roomlist", roomList);
+      io.emit("userUpdate", getOnline())
     }
   })
+
+  socket.on(makeRoom){
+    roomList.push(new Room(new ))
+  }
 });

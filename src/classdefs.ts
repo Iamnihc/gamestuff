@@ -1,5 +1,6 @@
 'use strict';
 import { v4 as uuidv4 } from 'uuid';
+import { allowedNodeEnvironmentFlags } from 'process';
 
 class pair{
   uname:string;
@@ -19,7 +20,7 @@ class User{
       this.sessionID = "";
     }
     public checkAuth(authCheck:pair){
-      return this.
+      return this.auth.checkAuth(authCheck.uname, authCheck.pin)
     }
     public getName(){
       return this.auth.getName();
@@ -41,13 +42,15 @@ class AuthPair{
           return this.pin==pin && this.uname == uname;
         }
         public getName(){
-          
           return this.uname;
         }
       
 }
 
-
+class publicRoom{
+  public roomNum:string;
+  public owner
+}
 class Room{
     public roomNum:string;
     public data:GamePackage;
@@ -174,10 +177,7 @@ class ConnectFour extends GamePackage{
     
 }
 
-class GameList{
-    chat=Chat;
-    none=NoGame;
-    c4 = ConnectFour;
-    all=[this.chat,this.none,this.c4];
+function getGame(game:string){
+  return [NoGame,ConnectFour,Chat][["none", "c4", "chat"].indexOf(game)]
 }
-export {pair,User,AuthPair,Room,MessageTemplate, GamePackage , Chat , NoGame,GameList, ConnectFour };
+export {pair,User,AuthPair,Room,MessageTemplate, GamePackage , Chat , NoGame, getGame, ConnectFour };

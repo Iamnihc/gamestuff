@@ -17,13 +17,14 @@
       <h2 class = data id = isConnectedBox >Connected to Server?</h2>
       <h2 class = data id = isConnectedBox>Refreshed by server?</h2>
       <h2 class = data id = changePassLink>Change Password</h2>
-
-
+      <div id=newRoom>
+        <h2 class = data id = createRoom width=50%>Create new Room:</h2>
+        <div id=gameList style="display: flex; justify-content:space-between;width:100%;" ></div>
+      </div>
     </div>
     <form onsubmit="checkUser(); return false;">
       <input id="theBox" type="text" placeholder = "Username">
     </form>
-    <ul id="events"></ul>
   </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src = "ps.js"></script>

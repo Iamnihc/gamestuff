@@ -1,5 +1,16 @@
 const $events = document.getElementById('events');
-
+const games = ["none", "c4", "chat"]
+window.onload = function(){
+  console.log("aaaa");
+  games.forEach(gameName=>{
+    let gameButton = document.createElement("h3")
+    gameButton.innerHTML = gameName;
+    gameButton.onclick=function(){
+      makeRoom(gameName)};
+  document.getElementById("gameList").appendChild(gameButton)
+  })
+};
+loggedIn=false;
 const socket = io();
 socket.on('refresh', ()=>{
   console.log("server side change??");
@@ -38,10 +49,17 @@ socket.on('makepin',(uname) =>{
   socket.emit('usercreate',{uname, pin });
 });
 socket.on("login", data =>{
-  
+  console.log(data)
 });
 
-socket.on("*",function(event,data) {
-  console.log(event);
-  console.log(data);
+socket.on("err",data=>{
+  alert(data);
 });
+
+function makeRoom(GameType){
+  console.log("aaaaaaa")
+  if (["chat", "none", "c4"].includes(GameType)){
+    socket.emit("newRoom", GameType)
+  }
+}
+
